@@ -2,6 +2,7 @@ package com.db.dataplatform.techtest.client.component;
 
 import com.db.dataplatform.techtest.client.api.model.DataEnvelope;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.http.ResponseEntity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;

@@ -22,44 +22,44 @@ import static com.db.dataplatform.techtest.Constant.DUMMY_DATA;
 @EnableRetry
 public class TechTestApplication {
 
-	public static final String HEADER_NAME = "TSLA-USDGBP-10Y";
-	public static final String MD5_CHECKSUM = "cecfd3953783df706878aaec2c22aa70";
+    public static final String HEADER_NAME = "TSLA-USDGBP-10Y";
+    public static final String MD5_CHECKSUM = "cecfd3953783df706878aaec2c22aa70";
 
-	@Autowired
-	private Client client;
+    @Autowired
+    private Client client;
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		SpringApplication.run(TechTestApplication.class, args);
-	}
+        SpringApplication.run(TechTestApplication.class, args);
+    }
 
-	@EventListener(ApplicationReadyEvent.class)
-	public void initiatePushDataFlow() throws JsonProcessingException, UnsupportedEncodingException {
-		pushData();
+    @EventListener(ApplicationReadyEvent.class)
+    public void initiatePushDataFlow() throws JsonProcessingException, UnsupportedEncodingException {
+        pushData();
 
-		queryData();
+        queryData();
 
-		updateData();
-	}
+        updateData();
+    }
 
-	private void updateData() throws UnsupportedEncodingException {
-		boolean success = client.updateData(HEADER_NAME, BlockTypeEnum.BLOCKTYPEB.name());
-	}
+    private void updateData() throws UnsupportedEncodingException {
+        boolean success = client.updateData(HEADER_NAME, BlockTypeEnum.BLOCKTYPEB.name());
+    }
 
-	private void queryData() {
+    private void queryData() {
 
-		List<DataEnvelope> data = client.getData(BlockTypeEnum.BLOCKTYPEA.name());
-	}
+        List<DataEnvelope> data = client.getData(BlockTypeEnum.BLOCKTYPEA.name());
+    }
 
-	private void pushData() throws JsonProcessingException {
+    private void pushData() throws JsonProcessingException {
 
-		DataBody dataBody = new DataBody(DUMMY_DATA);
+        DataBody dataBody = new DataBody(DUMMY_DATA);
 
-		DataHeader dataHeader = new DataHeader(HEADER_NAME, BlockTypeEnum.BLOCKTYPEA);
+        DataHeader dataHeader = new DataHeader(HEADER_NAME, BlockTypeEnum.BLOCKTYPEA);
 
-		DataEnvelope dataEnvelope = new DataEnvelope(dataHeader, dataBody,"md5CheckSum");
+        DataEnvelope dataEnvelope = new DataEnvelope(dataHeader, dataBody, "cecfd3953783df706878aaec2c22aa70");
 
-		client.pushData(dataEnvelope);
-	}
+        client.pushData(dataEnvelope);
+    }
 
 }

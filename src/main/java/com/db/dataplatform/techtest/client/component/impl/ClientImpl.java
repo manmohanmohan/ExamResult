@@ -3,12 +3,8 @@ package com.db.dataplatform.techtest.client.component.impl;
 import com.db.dataplatform.techtest.client.RestTemplateConfiguration;
 import com.db.dataplatform.techtest.client.api.model.DataEnvelope;
 import com.db.dataplatform.techtest.client.component.Client;
-import com.db.dataplatform.techtest.server.persistence.model.DataBodyEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -39,7 +35,7 @@ public class ClientImpl implements Client {
     @Override
     public void pushData(DataEnvelope dataEnvelope) {
         RestTemplate restTemplate = getRestTemplate();
-        restTemplate.postForEntity(URI_PUSHDATA,dataEnvelope, Boolean.class);
+        restTemplate.postForEntity(URI_PUSHDATA, dataEnvelope, Boolean.class);
         log.info("Pushing data {} to {}", dataEnvelope.getDataHeader().getName(), URI_PUSHDATA);
 
     }
@@ -47,8 +43,8 @@ public class ClientImpl implements Client {
     private RestTemplate getRestTemplate() {
         StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
         stringConverter.setSupportedMediaTypes(
-                Arrays.asList(MediaType.TEXT_PLAIN, MediaType.TEXT_HTML, MediaType.APPLICATION_JSON));
-        RestTemplate restTemplate= restTemplateConfiguration.createRestTemplate(new MappingJackson2HttpMessageConverter(),stringConverter);
+                Arrays.asList(MediaType.TEXT_PLAIN, MediaType.TEXT_HTML, MediaType.APPLICATION_JSON, MediaType.ALL));
+        RestTemplate restTemplate = restTemplateConfiguration.createRestTemplate(new MappingJackson2HttpMessageConverter(), stringConverter);
         return restTemplate;
     }
 
@@ -57,15 +53,15 @@ public class ClientImpl implements Client {
         log.info("Query for data with header block type {}", blockType);
         RestTemplate restTemplate = getRestTemplate();
         ResponseEntity<List<DataEnvelope>> responseEntity;
-     //           restTemplate.getForObject(URI_GETDATA,DataEnvelope[].class);
-        return null;
+        DataEnvelope[] dataEnvelopes = restTemplate.getForObject(URI_GETDATA.toString(), DataEnvelope[].class, blockType);
+        return Arrays.asList(dataEnvelopes);
     }
 
     @Override
     public boolean updateData(String blockName, String newBlockType) {
         log.info("Updating blocktype to {} for block with name {}", newBlockType, blockName);
         RestTemplate restTemplate = getRestTemplate();
-//        restTemplate.patchForObject(URI_PATCHDATA, Boolean.class,blockName,newBlockType);
+        restTemplate.patchForObject(URI_PATCHDATA.toString(), null, Boolean.class, blockName, newBlockType);
         return true;
     }
 
